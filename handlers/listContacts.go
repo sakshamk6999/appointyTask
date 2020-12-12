@@ -3,6 +3,7 @@ package handlers
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"log"
 	"net/http"
 	"strconv"
@@ -35,6 +36,7 @@ func ListContactsHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	infectionTime := time.Unix(tempInfectionTime, 0)
+	fmt.Println(infectionTime.UTC().String())
 	beforeTime := infectionTime.AddDate(0, 0, -14)
 
 	cursor, err := collection.Find(context.TODO(), bson.M{
@@ -44,12 +46,12 @@ func ListContactsHandler(w http.ResponseWriter, r *http.Request) {
 			},
 			bson.M{
 				"contactTime": bson.M{
-					"lte": infectionTime,
+					"lte": infectionTime.UTC(),
 				},
 			},
 			bson.M{
 				"contactTime": bson.M{
-					"gte": beforeTime,
+					"gte": beforeTime.UTC(),
 				},
 			},
 		},

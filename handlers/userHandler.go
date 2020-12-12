@@ -31,9 +31,14 @@ func GetUserHandler(w http.ResponseWriter, r *http.Request) {
 		result := collection.FindOne(context.TODO(), filter)
 		err = result.Decode(&resultUser)
 		if err != nil {
-			log.Fatal(err)
+			w.WriteHeader(http.StatusBadRequest)
+			http.Error(w, "the given user is not present", 400)
+
+			// log.Fatal(err)
+		} else {
+			w.WriteHeader(http.StatusOK)
+			json.NewEncoder(w).Encode(resultUser)
 		}
-		json.NewEncoder(w).Encode(resultUser)
 	} else if r.Method == "POST" {
 		var insertUser models.User
 		err := json.NewDecoder(r.Body).Decode(&insertUser)
