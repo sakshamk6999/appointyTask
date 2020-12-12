@@ -29,6 +29,10 @@ func TestCreateContactError(t *testing.T) {
 
 	handler.ServeHTTP(responseRecorder, req)
 	fmt.Println(responseRecorder.Body.String())
+	fmt.Println(responseRecorder.Result().StatusCode)
+	if responseRecorder.Result().StatusCode != 400 {
+		t.Errorf("got:=> %v", responseRecorder.Result().StatusCode)
+	}
 }
 
 func TestNullListContact(t *testing.T) {
