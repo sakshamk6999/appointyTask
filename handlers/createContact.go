@@ -3,7 +3,6 @@ package handlers
 import (
 	"context"
 	"encoding/json"
-	"log"
 	"net/http"
 
 	"example.com/appointyTask/db"
@@ -18,12 +17,14 @@ func CreateContactHandler(w http.ResponseWriter, r *http.Request) {
 	err := json.NewDecoder(r.Body).Decode(&insertContact)
 
 	if err != nil {
-		log.Fatal(err)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
 	}
 
 	client, err := db.ConnectMongoDB()
 	if err != nil {
-		log.Fatal("error connecting to mongo")
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
 	}
 
 	database := client.Database("taskDB")
@@ -35,34 +36,37 @@ func CreateContactHandler(w http.ResponseWriter, r *http.Request) {
 				"userIdOne": insertContact.UserIdOne,
 			},
 			bson.M{
-				"contactTime": insertContact.ContactTime,
+				"contacttime": insertContact.ContactTime,
 			},
 		},
 	})
 	err = result.Decode(&temp)
 	if err != nil {
-		log.Fatal("user ", insertContact.UserIdOne, "already has a meeting at time ", insertContact.ContactTime)
+		http.Error(w, "user already has meeting at that time", http.StatusBadRequest)
+		return
 	}
 
 	result = collection.FindOne(context.TODO(), bson.M{
 		"$and": []interface{}{
 			bson.M{
-				"userIdTwo": insertContact.UserIdOne,
+				"useridtwo": insertContact.UserIdOne,
 			},
 			bson.M{
-				"contactTime": insertContact.ContactTime,
+				"contacttime": insertContact.ContactTime,
 			},
 		},
 	})
 
 	err = result.Decode(&temp)
 	if err != nil {
-		log.Fatal("user ", insertContact.UserIdTwo, " already has a meeting at time ", insertContact.ContactTime)
+		http.Error(w, "user already has meeting at that time", http.StatusBadRequest)
+		return
 	}
 
 	insertResult, err := collection.InsertOne(context.TODO(), insertContact)
 	if err != nil {
-		log.Fatal(err)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
 	}
 
 	json.NewEncoder(w).Encode(insertResult)

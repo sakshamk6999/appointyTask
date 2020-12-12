@@ -4,7 +4,6 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"log"
 	"net/http"
 	"strconv"
 	"strings"
@@ -19,7 +18,9 @@ func ListContactsHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	client, err := db.ConnectMongoDB()
 	if err != nil {
-		log.Fatal("error connecting to mongo")
+		http.Error(w, "error connecting to mongo", http.StatusInternalServerError)
+		// log.Fatal("error connecting to mongo")
+		return
 	}
 
 	database := client.Database("taskDB")
@@ -32,7 +33,8 @@ func ListContactsHandler(w http.ResponseWriter, r *http.Request) {
 
 	tempInfectionTime, err := strconv.ParseInt(infectionTimeString, 10, 64)
 	if err != nil {
-		log.Fatal(err)
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
 	}
 
 	infectionTime := time.Unix(tempInfectionTime, 0)
@@ -64,7 +66,9 @@ func ListContactsHandler(w http.ResponseWriter, r *http.Request) {
 		var tempUser models.User
 		err := cursor.Decode(&tempContact)
 		if err != nil {
-			log.Fatal(err)
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			// log.Fatal(err)
+			return
 		}
 
 		filter := bson.M{
@@ -74,7 +78,9 @@ func ListContactsHandler(w http.ResponseWriter, r *http.Request) {
 		tempResult := userCollection.FindOne(context.TODO(), filter)
 		err = tempResult.Decode(&tempUser)
 		if err != nil {
-			log.Fatal(err)
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			// log.Fatal(err)
+			return
 		}
 
 		result = append(result, tempUser)

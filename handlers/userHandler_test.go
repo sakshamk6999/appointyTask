@@ -31,7 +31,7 @@ func tearDown() {
 	database := client.Database("taskDB")
 	collection := database.Collection("users")
 	collection.DeleteMany(context.TODO(), bson.M{
-		"id": "10",
+		"id": "11",
 	})
 }
 
@@ -54,7 +54,7 @@ func TestUserHandler(t *testing.T) {
 }
 
 func TestNoUser(t *testing.T) {
-	req, err := http.NewRequest("GET", "/users/3", nil)
+	req, err := http.NewRequest("GET", "/users/4", nil)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -73,11 +73,11 @@ func TestNoUser(t *testing.T) {
 func TestCreateUser(t *testing.T) {
 	var jsonStr = []byte(`
 	{
-		"id":"10",
-		"name":"saksham",
+		"id":"11",
+		"name":"sak",
 		"dateofBirth": "1999-09-06T00:00:00+00:00",
-		"phoneNumber": "9999999999",
-		"email": "example@gmail.com",
+		"phoneNumber": "9999999988",
+		"email": "exampe@gmail.com",
 		"creationTime":"2020-12-12T00:00:00+00:00"
 	}
 	`)
