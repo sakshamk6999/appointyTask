@@ -10,7 +10,7 @@ import (
 	"example.com/appointyTask/models"
 )
 
-func createContactHandler(w http.ResponseWriter, r *http.Request) {
+func CreateContactHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	var insertContact models.Contact
 	err := json.NewDecoder(r.Body).Decode(&insertContact)

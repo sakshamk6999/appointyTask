@@ -14,7 +14,7 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 )
 
-func listContactsHandler(w http.ResponseWriter, r *http.Request) {
+func ListContactsHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	client, err := db.ConnectMongoDB()
 	if err != nil {
@@ -24,9 +24,10 @@ func listContactsHandler(w http.ResponseWriter, r *http.Request) {
 	database := client.Database("taskDB")
 	collection := database.Collection("contact")
 	userCollection := database.Collection("users")
-	i := strings.Index(r.URL.Path, "&")
-	userId := r.URL.Path[len("/contacts?user="):i]
-	infectionTimeString := r.URL.Path[i+1:]
+	i := strings.Index(r.URL.String(), "&")
+	urlString := r.URL.String()
+	userId := urlString[len("/contacts?user="):i]
+	infectionTimeString := urlString[i+1+len("infection_timestamp="):]
 
 	tempInfectionTime, err := strconv.ParseInt(infectionTimeString, 10, 64)
 	if err != nil {
