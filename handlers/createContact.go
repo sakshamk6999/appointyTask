@@ -40,7 +40,7 @@ func CreateContactHandler(w http.ResponseWriter, r *http.Request) {
 		},
 	})
 	err = result.Decode(&temp)
-	if err == nil {
+	if err != nil {
 		log.Fatal("user ", insertContact.UserIdOne, "already has a meeting at time ", insertContact.ContactTime)
 	}
 
@@ -56,7 +56,7 @@ func CreateContactHandler(w http.ResponseWriter, r *http.Request) {
 	})
 
 	err = result.Decode(&temp)
-	if err == nil {
+	if err != nil {
 		log.Fatal("user ", insertContact.UserIdTwo, " already has a meeting at time ", insertContact.ContactTime)
 	}
 

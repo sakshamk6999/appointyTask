@@ -8,7 +8,7 @@ import (
 	"testing"
 )
 
-func TestCreateContact(t *testing.T) {
+func TestCreateContactError(t *testing.T) {
 	var jsonStr = []byte(`
 	{
 		"userIdOne":"10",
@@ -31,7 +31,7 @@ func TestCreateContact(t *testing.T) {
 	fmt.Println(responseRecorder.Body.String())
 }
 
-func TestListContact(t *testing.T) {
+func TestNullListContact(t *testing.T) {
 	req, err := http.NewRequest("GET", "/contacts?user=10&infection_timestamp=1607731200", nil)
 	if err != nil {
 		t.Fatal(err)
