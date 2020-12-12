@@ -30,3 +30,21 @@ func TestCreateContact(t *testing.T) {
 	handler.ServeHTTP(responseRecorder, req)
 	fmt.Println(responseRecorder.Body.String())
 }
+
+func TestListContact(t *testing.T) {
+	req, err := http.NewRequest("GET", "/contacts?user=10&infection_timestamp=1607731200", nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	responseRecorder := httptest.NewRecorder()
+	handler := http.HandlerFunc(ListContactsHandler)
+
+	handler.ServeHTTP(responseRecorder, req)
+	fmt.Println(responseRecorder.Body)
+	status := responseRecorder.Code
+	if status != 200 {
+		t.Errorf("status code does not match !, got %v", status)
+	}
+
+}

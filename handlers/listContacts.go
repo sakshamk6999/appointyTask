@@ -38,7 +38,7 @@ func ListContactsHandler(w http.ResponseWriter, r *http.Request) {
 	infectionTime := time.Unix(tempInfectionTime, 0)
 	fmt.Println(infectionTime.UTC().String())
 	beforeTime := infectionTime.AddDate(0, 0, -14)
-
+	fmt.Println(beforeTime.UTC())
 	cursor, err := collection.Find(context.TODO(), bson.M{
 		"$and": []interface{}{
 			bson.M{
