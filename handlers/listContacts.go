@@ -45,13 +45,13 @@ func ListContactsHandler(w http.ResponseWriter, r *http.Request) {
 				"userIdOne": userId,
 			},
 			bson.M{
-				"contactTime": bson.M{
-					"lte": infectionTime.UTC(),
+				"contacttime": bson.M{
+					"$lte": infectionTime.UTC(),
 				},
 			},
 			bson.M{
-				"contactTime": bson.M{
-					"gte": beforeTime.UTC(),
+				"contacttime": bson.M{
+					"$gte": beforeTime.UTC(),
 				},
 			},
 		},
